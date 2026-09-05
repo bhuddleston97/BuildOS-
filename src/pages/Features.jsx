@@ -5,7 +5,7 @@ const modules = [
   {
     category: "Project Control",
     accent: "brand-lime",
-    accentHex: "#e8ff4d",
+    accentHex: "#60a5fa",
     items: [
       { title: "Project Dashboard", desc: "Real-time view of every project's status, milestones, cost, and schedule health. Drill down from portfolio to task level in seconds." },
       { title: "Gantt & Scheduling", desc: "Drag-and-drop schedule builder with critical path detection, dependency linking, and auto-alerts when the plan shifts." },
@@ -65,10 +65,10 @@ export default function Features() {
       {/* Header */}
       <section className="pt-36 pb-20 px-6 border-b border-brand-border">
         <div className="max-w-7xl mx-auto">
-          <p className="font-display font-600 text-brand-lime text-sm tracking-widest uppercase mb-5 animate-fade-up">
+          <p className="font-display font-[600] text-brand-lime text-sm tracking-widest uppercase mb-5 animate-fade-up">
             Platform features
           </p>
-          <h1 className="font-display font-800 text-5xl md:text-6xl text-white leading-tight mb-6 animate-fade-up delay-100 max-w-3xl">
+          <h1 className="font-display font-[800] text-5xl md:text-6xl text-white leading-tight mb-6 animate-fade-up delay-100 max-w-3xl">
             Every tool your team needs, nothing they don't
           </h1>
           <p className="font-body text-brand-muted text-xl leading-relaxed max-w-2xl animate-fade-up delay-200">
@@ -86,7 +86,7 @@ export default function Features() {
             <div className="flex items-center gap-4 mb-8">
               <div className="h-px flex-1 bg-brand-border" />
               <h2
-                className={`font-display font-800 text-2xl text-${mod.accent} whitespace-nowrap`}
+                className={`font-display font-[800] text-2xl text-${mod.accent} whitespace-nowrap`}
               >
                 {mod.category}
               </h2>
@@ -96,7 +96,7 @@ export default function Features() {
               {mod.items.map((item) => (
                 <div
                   key={item.title}
-                  className="group p-6 bg-brand-panel border border-brand-border rounded-sm hover:border-brand-border/80 transition-all duration-300"
+                  className="group p-6 bg-brand-panel border border-brand-border rounded-xl hover:border-brand-border/80 transition-all duration-300"
                   style={{ borderTopColor: "transparent" }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderTopColor = mod.accentHex + "40";
@@ -109,7 +109,7 @@ export default function Features() {
                     className="w-1 h-8 rounded-full mb-4"
                     style={{ backgroundColor: mod.accentHex + "60" }}
                   />
-                  <h3 className="font-display font-700 text-white text-base mb-2">
+                  <h3 className="font-display font-[700] text-white text-base mb-2">
                     {item.title}
                   </h3>
                   <p className="font-body text-brand-muted text-sm leading-relaxed">
@@ -125,7 +125,7 @@ export default function Features() {
       {/* CTA */}
       <section className="py-20 px-6 bg-brand-panel border-t border-brand-border">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="font-display font-800 text-4xl text-white mb-4">
+          <h2 className="font-display font-[800] text-4xl text-white mb-4">
             See everything in action
           </h2>
           <p className="font-body text-brand-muted mb-8">
@@ -133,7 +133,7 @@ export default function Features() {
           </p>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 bg-brand-lime text-brand-dark font-display font-700 px-8 py-4 rounded-sm hover:bg-white transition-colors"
+            className="inline-flex items-center gap-2 bg-brand-lime text-brand-dark font-display font-[700] px-8 py-4 rounded-xl hover:bg-white transition-colors"
           >
             Start your free trial <ArrowRight className="w-4 h-4" />
           </Link>

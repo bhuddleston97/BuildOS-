@@ -21,13 +21,14 @@ import AppChangeOrders from "./pages/app/AppChangeOrders.jsx";
 import AppVendors from "./pages/app/AppVendors.jsx";
 import AppNotifications from "./pages/app/AppNotifications.jsx";
 import AppProjectWizard from "./pages/app/AppProjectWizard.jsx";
+import InviteAccept from "./pages/InviteAccept.jsx";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080c0b] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#e8ff4d]/30 border-t-[#e8ff4d] rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-[#60a5fa]/30 border-t-[#60a5fa] rounded-full animate-spin" />
       </div>
     );
   }
@@ -39,8 +40,8 @@ function AuthRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080c0b] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-[#e8ff4d]/30 border-t-[#e8ff4d] rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-[#60a5fa]/30 border-t-[#60a5fa] rounded-full animate-spin" />
       </div>
     );
   }
@@ -63,6 +64,7 @@ export default function App() {
 
         {/* Auth — redirect if already signed in */}
         <Route path="/signin" element={<AuthRoute><SignIn /></AuthRoute>} />
+        <Route path="/invite" element={<InviteAccept />} />
 
         {/* Protected app */}
         <Route path="/app" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>

@@ -81,10 +81,10 @@ export default function Pricing() {
       {/* Header */}
       <section className="pt-36 pb-16 px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <p className="font-display font-600 text-brand-lime text-xs tracking-widest uppercase mb-5 animate-fade-up">
+          <p className="font-display font-[600] text-brand-lime text-xs tracking-widest uppercase mb-5 animate-fade-up">
             Pricing
           </p>
-          <h1 className="font-display font-800 text-5xl text-white leading-tight mb-5 animate-fade-up delay-100">
+          <h1 className="font-display font-[800] text-5xl text-white leading-tight mb-5 animate-fade-up delay-100">
             Simple pricing,<br />serious capability
           </h1>
           <p className="font-body text-brand-muted text-lg mb-10 animate-fade-up delay-200">
@@ -95,7 +95,7 @@ export default function Pricing() {
           <div className="inline-flex items-center gap-3 border border-brand-border rounded-full p-1 animate-fade-up delay-300">
             <button
               onClick={() => setAnnual(false)}
-              className={`text-sm font-display font-600 px-5 py-2 rounded-full transition-all ${
+              className={`text-sm font-display font-[600] px-5 py-2 rounded-full transition-all ${
                 !annual ? "bg-brand-lime text-brand-dark" : "text-brand-muted"
               }`}
             >
@@ -103,7 +103,7 @@ export default function Pricing() {
             </button>
             <button
               onClick={() => setAnnual(true)}
-              className={`text-sm font-display font-600 px-5 py-2 rounded-full transition-all flex items-center gap-2 ${
+              className={`text-sm font-display font-[600] px-5 py-2 rounded-full transition-all flex items-center gap-2 ${
                 annual ? "bg-brand-lime text-brand-dark" : "text-brand-muted"
               }`}
             >
@@ -122,7 +122,7 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-sm border p-8 flex flex-col ${
+              className={`relative rounded-xl border p-8 flex flex-col ${
                 plan.highlight
                   ? "border-brand-lime/50 bg-brand-lime/5"
                   : "border-brand-border bg-brand-panel"
@@ -130,14 +130,14 @@ export default function Pricing() {
             >
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-brand-lime text-brand-dark text-xs font-display font-700 px-3 py-1 rounded-full whitespace-nowrap">
+                  <span className="bg-brand-lime text-brand-dark text-xs font-display font-[700] px-3 py-1 rounded-full whitespace-nowrap">
                     {plan.badge}
                   </span>
                 </div>
               )}
 
               <div className="mb-8">
-                <h2 className="font-display font-800 text-2xl text-white mb-1">{plan.name}</h2>
+                <h2 className="font-display font-[800] text-2xl text-white mb-1">{plan.name}</h2>
                 <p className="font-body text-brand-muted text-sm">{plan.tagline}</p>
               </div>
 
@@ -145,7 +145,7 @@ export default function Pricing() {
                 {plan.price.monthly ? (
                   <>
                     <div className="flex items-end gap-1">
-                      <span className="font-display font-800 text-5xl text-white">
+                      <span className="font-display font-[800] text-5xl text-white">
                         ${annual ? plan.price.annual : plan.price.monthly}
                       </span>
                       <span className="font-body text-brand-muted text-sm mb-2">/mo</span>
@@ -155,7 +155,7 @@ export default function Pricing() {
                     </p>
                   </>
                 ) : (
-                  <div className="font-display font-800 text-3xl text-white">Custom</div>
+                  <div className="font-display font-[800] text-3xl text-white">Custom</div>
                 )}
               </div>
 
@@ -174,7 +174,7 @@ export default function Pricing() {
 
               <Link
                 to="/signin"
-                className={`text-center font-display font-700 text-sm py-3.5 px-6 rounded-sm transition-colors flex items-center justify-center gap-2 ${
+                className={`text-center font-display font-[700] text-sm py-3.5 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 ${
                   plan.highlight
                     ? "bg-brand-lime text-brand-dark hover:bg-white"
                     : "border border-brand-border text-white hover:border-brand-lime/50"
@@ -190,13 +190,13 @@ export default function Pricing() {
       {/* FAQs */}
       <section className="py-20 px-6 border-t border-brand-border">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-display font-800 text-4xl text-white text-center mb-14">
+          <h2 className="font-display font-[800] text-4xl text-white text-center mb-14">
             Common questions
           </h2>
           <div className="space-y-8">
             {faqs.map((f) => (
               <div key={f.q} className="border-b border-brand-border pb-8">
-                <h3 className="font-display font-700 text-white text-lg mb-3">{f.q}</h3>
+                <h3 className="font-display font-[700] text-white text-lg mb-3">{f.q}</h3>
                 <p className="font-body text-brand-muted leading-relaxed">{f.a}</p>
               </div>
             ))}
@@ -207,7 +207,7 @@ export default function Pricing() {
       {/* CTA */}
       <section className="py-20 px-6 bg-brand-panel border-t border-brand-border">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="font-display font-800 text-4xl text-white mb-4">
+          <h2 className="font-display font-[800] text-4xl text-white mb-4">
             Still have questions?
           </h2>
           <p className="font-body text-brand-muted mb-8">
@@ -215,7 +215,7 @@ export default function Pricing() {
           </p>
           <Link
             to="/signin"
-            className="inline-flex items-center gap-2 bg-brand-lime text-brand-dark font-display font-700 px-8 py-4 rounded-sm hover:bg-white transition-colors"
+            className="inline-flex items-center gap-2 bg-brand-lime text-brand-dark font-display font-[700] px-8 py-4 rounded-xl hover:bg-white transition-colors"
           >
             Talk to us <ArrowRight className="w-4 h-4" />
           </Link>

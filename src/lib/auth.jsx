@@ -33,10 +33,17 @@ export function AuthProvider({ children }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
 
-      setUser(session?.user ? await hydrateUser(session.user) : null);
+      if (!session?.user) {
+        setUser(null);
+        return;
+      }
+
+      hydrateUser(session.user).then(hydrated => {
+        if (mounted) setUser(hydrated);
+      });
     });
 
     return () => {
@@ -64,6 +71,12 @@ export function AuthProvider({ children }) {
     const { data: authData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
+      options: {
+        data: {
+          full_name: data.full_name || "",
+          job_title: data.job_title || "",
+        },
+      },
     });
 
     if (error) {
@@ -71,9 +84,12 @@ export function AuthProvider({ children }) {
     }
 
     const hydrated = authData.user ? await hydrateUser(authData.user) : null;
-    setUser(hydrated);
+    setUser(authData.session ? hydrated : null);
 
-    return hydrated;
+    return {
+      user: hydrated,
+      requiresEmailConfirmation: Boolean(authData.user && !authData.session),
+    };
   }
 
   async function signOut() {
@@ -112,15 +128,21 @@ export function useAuth() {
 }
 
 async function hydrateUser(authUser) {
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", authUser.id)
     .maybeSingle();
 
+  if (error && error.code !== "PGRST116") {
+    console.error("Unable to load user profile:", error);
+  }
+
   return {
     ...authUser,
     ...(profile || {}),
+    full_name: profile?.full_name || authUser.user_metadata?.full_name || "",
+    job_title: profile?.job_title || authUser.user_metadata?.job_title || "",
     email: authUser.email || profile?.email || "",
   };
 }

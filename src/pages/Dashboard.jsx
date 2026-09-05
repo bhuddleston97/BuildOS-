@@ -94,10 +94,10 @@ export default function Dashboard() {
       <section className="pt-28 pb-6 px-6 border-b border-brand-border">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <p className="font-display font-600 text-brand-lime text-xs tracking-widest uppercase mb-2">
+            <p className="font-display font-[600] text-brand-lime text-xs tracking-widest uppercase mb-2">
               Portfolio View
             </p>
-            <h1 className="font-display font-800 text-4xl text-white">Project Dashboard</h1>
+            <h1 className="font-display font-[800] text-4xl text-white">Project Dashboard</h1>
           </div>
           <div className="flex items-center gap-2 text-xs font-body text-brand-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-lime animate-pulse-slow" />
@@ -115,11 +115,11 @@ export default function Dashboard() {
             { icon: Users, label: "Crew on Site", value: totalCrew, sub: "across all projects", color: "text-sky-400" },
             { icon: AlertTriangle, label: "Open Issues", value: totalIssues, sub: `${projects.filter(p=>p.status==="at-risk"||p.status==="delayed").length} projects need attention`, color: "text-rose-400" },
           ].map((card) => (
-            <div key={card.label} className="bg-brand-panel border border-brand-border rounded-sm p-5">
+            <div key={card.label} className="bg-brand-panel border border-brand-border rounded-xl p-5">
               <div className="flex items-start justify-between mb-4">
                 <card.icon className={`w-5 h-5 ${card.color}`} />
               </div>
-              <div className={`font-display font-800 text-3xl ${card.color} mb-1`}>
+              <div className={`font-display font-[800] text-3xl ${card.color} mb-1`}>
                 {card.value}
               </div>
               <div className="font-body text-white text-xs font-medium mb-0.5">{card.label}</div>
@@ -137,7 +137,7 @@ export default function Dashboard() {
                 <button
                   key={v}
                   onClick={() => setFilter(v)}
-                  className={`text-xs font-display font-600 px-3 py-1.5 rounded-full border transition-all ${
+                  className={`text-xs font-display font-[600] px-3 py-1.5 rounded-full border transition-all ${
                     filter === v
                       ? "bg-brand-lime/10 border-brand-lime/40 text-brand-lime"
                       : "border-brand-border text-brand-muted hover:text-white"
@@ -155,16 +155,16 @@ export default function Dashboard() {
                 return (
                   <div
                     key={p.name}
-                    className="bg-brand-panel border border-brand-border rounded-sm p-5 hover:border-brand-lime/20 transition-colors cursor-pointer group"
+                    className="bg-brand-panel border border-brand-border rounded-xl p-5 hover:border-brand-lime/20 transition-colors cursor-pointer group"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                       <div>
-                        <h3 className="font-display font-700 text-white text-base group-hover:text-brand-lime transition-colors">
+                        <h3 className="font-display font-[700] text-white text-base group-hover:text-brand-lime transition-colors">
                           {p.name}
                         </h3>
                         <p className="font-body text-brand-muted text-xs mt-0.5">{p.phase}</p>
                       </div>
-                      <span className={`inline-flex items-center gap-1.5 ${s.bg} ${s.border} border ${s.color} text-xs font-display font-600 px-2.5 py-1 rounded-full whitespace-nowrap`}>
+                      <span className={`inline-flex items-center gap-1.5 ${s.bg} ${s.border} border ${s.color} text-xs font-display font-[600] px-2.5 py-1 rounded-full whitespace-nowrap`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
                         {s.label}
                       </span>
@@ -174,7 +174,7 @@ export default function Dashboard() {
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1.5">
                         <span className="font-body text-xs text-brand-muted">Overall progress</span>
-                        <span className="font-display font-700 text-xs text-white">{p.progress}%</span>
+                        <span className="font-display font-[700] text-xs text-white">{p.progress}%</span>
                       </div>
                       <div className="h-1.5 bg-brand-dark rounded-full overflow-hidden">
                         <div
@@ -192,7 +192,7 @@ export default function Dashboard() {
                         { label: "Crew", value: p.crew },
                       ].map((m) => (
                         <div key={m.label}>
-                          <div className="font-display font-700 text-white text-sm">{m.value}</div>
+                          <div className="font-display font-[700] text-white text-sm">{m.value}</div>
                           <div className="font-body text-brand-muted text-xs">{m.label}</div>
                         </div>
                       ))}
@@ -205,7 +205,7 @@ export default function Dashboard() {
 
           {/* Activity feed */}
           <div>
-            <h3 className="font-display font-700 text-white text-base mb-4">Recent activity</h3>
+            <h3 className="font-display font-[700] text-white text-base mb-4">Recent activity</h3>
             <div className="space-y-1">
               {recentActivity.map((a, i) => {
                 const iconMap = {
@@ -226,7 +226,7 @@ export default function Dashboard() {
                 };
                 const Icon = iconMap[a.type];
                 return (
-                  <div key={i} className="flex gap-3 p-3 rounded-sm hover:bg-brand-panel/50 transition-colors">
+                  <div key={i} className="flex gap-3 p-3 rounded-xl hover:bg-brand-panel/50 transition-colors">
                     <Icon className={`w-4 h-4 ${colorMap[a.type]} flex-shrink-0 mt-0.5`} />
                     <div>
                       <p className="font-body text-brand-text text-xs leading-relaxed">{a.text}</p>
@@ -244,19 +244,19 @@ export default function Dashboard() {
         </div>
 
         {/* AI insight banner */}
-        <div className="border border-brand-lime/20 bg-brand-lime/5 rounded-sm p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="border border-brand-lime/20 bg-brand-lime/5 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-8 h-8 bg-brand-lime/15 rounded flex items-center justify-center flex-shrink-0">
             <span className="text-brand-lime text-sm">AI</span>
           </div>
           <div className="flex-1">
             <p className="font-body text-brand-text text-sm leading-relaxed">
-              <span className="font-display font-700 text-brand-lime">BuildOS AI:</span>{" "}
+              <span className="font-display font-[700] text-brand-lime">BuildOS AI:</span>{" "}
               Riverside Commercial Plaza's MEP rough-in is 6 days behind based on task velocity.
               With 88 days until deadline, you have a buffer — but a crew shift this week could
               prevent it becoming critical. Want me to model the schedule impact?
             </p>
           </div>
-          <button className="whitespace-nowrap text-xs font-display font-700 text-brand-dark bg-brand-lime px-4 py-2 rounded-sm hover:bg-white transition-colors flex-shrink-0">
+          <button className="whitespace-nowrap text-xs font-display font-[700] text-brand-dark bg-brand-lime px-4 py-2 rounded-xl hover:bg-white transition-colors flex-shrink-0">
             Ask AI
           </button>
         </div>

@@ -5,17 +5,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Syne', 'Georgia', 'sans-serif'],
-        body: ['DM Sans', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         brand: {
-          lime: '#e8ff4d',
-          dark: '#0b0f0e',
-          panel: '#111814',
-          border: '#1e2821',
-          muted: '#6b7a6e',
-          text: '#d4ddd6',
+          lime: '#60a5fa',
+          dark: '#09090b',
+          panel: '#18181b',
+          border: '#334155',
+          muted: '#94a3b8',
+          text: '#e2e8f0',
         }
       },
       animation: {
