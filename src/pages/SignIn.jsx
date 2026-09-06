@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../lib/auth.jsx";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
@@ -92,6 +92,7 @@ export default function SignIn() {
 function SignInForm({ error, setError }) {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -103,7 +104,7 @@ function SignInForm({ error, setError }) {
     setLoading(true);
     try {
       await signIn(email, password);
-      navigate("/app");
+      navigate(searchParams.get("redirect") || "/app");
     } catch {
       setError("Incorrect email or password. Please try again.");
     } finally {

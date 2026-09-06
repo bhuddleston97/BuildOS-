@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase.js";
 import { Check, ArrowRight } from "lucide-react";
 
 const plans = [
   {
     name: "Starter",
     tagline: "For growing contractors",
-    price: { monthly: 299, annual: 249 },
+    price: { monthly: 60, annual: 50 },
     highlight: false,
     features: [
       "Up to 5 active projects",
@@ -24,7 +25,7 @@ const plans = [
   {
     name: "Professional",
     tagline: "For midsize contractors",
-    price: { monthly: 749, annual: 624 },
+    price: { monthly: 100, annual: 83 },
     highlight: true,
     badge: "Most popular",
     features: [
@@ -75,6 +76,18 @@ const faqs = [
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(true);
+  const navigate = useNavigate();
+  const [checkoutPlan, setCheckoutPlan] = useState("");
+  const [checkoutError, setCheckoutError] = useState("");
+
+  async function startCheckout(plan) {
+    setCheckoutPlan(plan); setCheckoutError("");
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { navigate(`/signin?redirect=/pricing&plan=${plan}`); return; }
+    const { data, error } = await supabase.functions.invoke("create-checkout", { body: { plan, interval: annual ? "year" : "month" } });
+    if (error || !data?.url) { setCheckoutError(error?.message || "Checkout is temporarily unavailable."); setCheckoutPlan(""); return; }
+    window.location.assign(data.url);
+  }
 
   return (
     <>
@@ -119,6 +132,7 @@ export default function Pricing() {
       {/* Plans */}
       <section className="px-6 pb-20">
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-5">
+          {checkoutError && <p role="alert" className="md:col-span-3 mb-4 text-center text-sm text-rose-300">{checkoutError}</p>}
           {plans.map((plan) => (
             <div
               key={plan.name}
@@ -172,16 +186,17 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <Link
-                to="/signin"
+              {plan.price.monthly ? <button
+                onClick={() => startCheckout(plan.name.toLowerCase())}
+                disabled={Boolean(checkoutPlan)}
                 className={`text-center font-display font-[700] text-sm py-3.5 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 ${
                   plan.highlight
                     ? "bg-brand-lime text-brand-dark hover:bg-white"
                     : "border border-brand-border text-white hover:border-brand-lime/50"
                 }`}
               >
-                {plan.cta} <ArrowRight className="w-4 h-4" />
-              </Link>
+                {checkoutPlan === plan.name.toLowerCase() ? "Opening checkout…" : plan.cta} <ArrowRight className="w-4 h-4" />
+              </button> : <Link to="/contact" className="text-center font-display font-[700] text-sm py-3.5 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 border border-brand-border text-white hover:border-brand-lime/50">{plan.cta} <ArrowRight className="w-4 h-4" /></Link>}
             </div>
           ))}
         </div>

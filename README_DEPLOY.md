@@ -29,6 +29,7 @@ Apply these migrations to a staging Supabase project first, then production:
 4. `supabase/migrations/20260905000300_role_policies.sql`
 5. `supabase/migrations/20260905000400_secure_onboarding_rpcs.sql`
 6. `supabase/migrations/20260905000500_invitations.sql`
+7. `supabase/migrations/20260905000600_billing.sql`
 
 The first migration enables tenant isolation and fails closed for records with
 no `organization_id`. Before inviting users, assign every existing user to an
@@ -59,6 +60,26 @@ Deploy the functions with:
 npx supabase functions deploy invite-member --use-api
 npx supabase functions deploy accept-invitation --use-api
 ```
+
+## Stripe checkout
+
+Create four recurring Stripe Prices in test mode first: Starter monthly at
+$60, Starter annual at $50/month billed annually, Professional monthly at
+$100, and Professional annual at $83/month billed annually. Set their Stripe
+price IDs and secrets in Supabase:
+
+```bash
+npx supabase secrets set STRIPE_SECRET_KEY=sk_test_...
+npx supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+npx supabase secrets set STRIPE_STARTER_MONTH_PRICE_ID=price_...
+npx supabase secrets set STRIPE_STARTER_YEAR_PRICE_ID=price_...
+npx supabase secrets set STRIPE_PROFESSIONAL_MONTH_PRICE_ID=price_...
+npx supabase secrets set STRIPE_PROFESSIONAL_YEAR_PRICE_ID=price_...
+```
+
+Deploy `create-checkout` and `stripe-webhook`, then register the webhook URL
+`https://your-project.supabase.co/functions/v1/stripe-webhook` for checkout and
+subscription events. Test with Stripe test cards before switching to live keys.
 
 ## Local Verification
 
