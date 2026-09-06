@@ -72,6 +72,7 @@ export function AuthProvider({ children }) {
       email: data.email,
       password: data.password,
       options: {
+        emailRedirectTo: `${window.location.origin}/signin`,
         data: {
           full_name: data.full_name || "",
           job_title: data.job_title || "",
