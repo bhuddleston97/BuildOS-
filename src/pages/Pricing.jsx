@@ -68,7 +68,7 @@ const plans = [
 const faqs = [
   { q: "How does the free trial work?", a: "You get 14 full days with every Professional feature enabled — no credit card needed. At the end of the trial, you choose a plan or your data stays safe for 30 more days while you decide." },
   { q: "Can I change plans later?", a: "Yes. You can upgrade instantly and downgrade at the start of your next billing cycle. We prorate any mid-cycle changes." },
-  { q: "Is there a setup or onboarding fee?", a: "No. Starter and Professional include self-service onboarding guides and video walkthroughs. Enterprise customers get a dedicated implementation manager at no extra cost." },
+  { q: "Is there a setup or onboarding fee?", a: "No. Starter and Professional are designed for self-serve setup. Enterprise customers can add a dedicated implementation manager." },
   { q: "What counts as a field user seat?", a: "Anyone who logs in to submit reports, update tasks, or upload photos counts as a field user. Owners, project managers, and admin users are not counted against your field user limit." },
   { q: "Can field employees use it offline?", a: "Yes. The mobile app queues reports, photos, and task updates offline and syncs automatically when connectivity returns." },
   { q: "How is our data protected?", a: "Data is encrypted at rest and in transit. We offer role-based access, audit logs, and optional SSO for Enterprise. We never sell or share your project data." },
