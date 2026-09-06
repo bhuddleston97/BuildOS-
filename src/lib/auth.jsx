@@ -93,6 +93,18 @@ export function AuthProvider({ children }) {
     };
   }
 
+  async function resendConfirmation(email) {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/signin`,
+      },
+    });
+
+    if (error) throw error;
+  }
+
   async function signOut() {
     const { error } = await supabase.auth.signOut();
 
@@ -110,6 +122,7 @@ export function AuthProvider({ children }) {
         loading,
         signIn,
         signUp,
+        resendConfirmation,
         signOut,
       }}
     >

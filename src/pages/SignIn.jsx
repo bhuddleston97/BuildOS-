@@ -152,11 +152,12 @@ function SignInForm({ error, setError }) {
 }
 
 function SignUpForm({ error, setError }) {
-  const { signUp } = useAuth();
+  const { signUp, resendConfirmation } = useAuth();
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [confirmationSent, setConfirmationSent] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", job_title: "", password: "" });
 
   function set(k) { return (e) => setForm(f => ({ ...f, [k]: e.target.value })); }
@@ -169,6 +170,7 @@ function SignUpForm({ error, setError }) {
       const result = await signUp(form);
       if (result?.requiresEmailConfirmation) {
         setMessage("BuildOS sent a confirmation email. Open it to verify your account, then return here to sign in.");
+        setConfirmationSent(true);
         return;
       }
       navigate("/app");
@@ -194,6 +196,7 @@ function SignUpForm({ error, setError }) {
       )}
 
       {message && <div role="status" className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[13px] font-body px-4 py-3 rounded-xl">{message}</div>}
+      {confirmationSent && <button type="button" onClick={async () => { try { await resendConfirmation(form.email); setMessage("A fresh BuildOS confirmation email was sent."); } catch { setError("Unable to resend the confirmation email. Please try again shortly."); } }} className="text-[13px] text-[#60a5fa] hover:text-white font-body">Resend confirmation email</button>}
 
       <div className="space-y-3">
         {[
