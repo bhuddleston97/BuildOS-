@@ -168,7 +168,7 @@ function SignUpForm({ error, setError }) {
     try {
       const result = await signUp(form);
       if (result?.requiresEmailConfirmation) {
-        setMessage("Check your email to confirm your account before signing in.");
+        setMessage("BuildOS sent a confirmation email. Open it to verify your account, then return here to sign in.");
         return;
       }
       navigate("/app");

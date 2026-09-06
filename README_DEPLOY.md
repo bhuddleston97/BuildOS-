@@ -81,6 +81,29 @@ Deploy `create-checkout` and `stripe-webhook`, then register the webhook URL
 `https://your-project.supabase.co/functions/v1/stripe-webhook` for checkout and
 subscription events. Test with Stripe test cards before switching to live keys.
 
+## BuildOS authentication email
+
+Signup confirmation emails are sent by Supabase Auth. To send them through
+Resend with BuildOS branding, open Supabase Dashboard > Authentication > SMTP
+Settings and configure:
+
+- Host: `smtp.resend.com`
+- Port: `465` (SSL) or `587` (TLS)
+- Username: `resend`
+- Password: your Resend API key
+- Sender email: your verified Resend sender address
+- Sender name: `BuildOS`
+
+Then open Authentication > Email Templates and customize **Confirm signup**,
+**Invite user**, **Magic Link**, **Change Email**, and **Reset Password**. Keep
+the template variable `{{ .ConfirmationURL }}` as the action link. Set the
+Supabase Auth Site URL to the deployed app URL and add `/signin` and `/invite`
+to the allowed redirect URLs.
+
+Do not send signup passwords through a custom frontend email function. Supabase
+Auth should generate and verify confirmation links; Resend should only deliver
+them through SMTP.
+
 ## Local Verification
 
 ```bash
