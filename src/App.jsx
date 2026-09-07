@@ -1,5 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "./lib/auth.jsx";
+import { supabase } from "./lib/supabase.js";
 import SiteLayout from "./layouts/SiteLayout.jsx";
 import AppShell from "./layouts/AppShell.jsx";
 import Home from "./pages/Home.jsx";
@@ -22,17 +24,66 @@ import AppVendors from "./pages/app/AppVendors.jsx";
 import AppNotifications from "./pages/app/AppNotifications.jsx";
 import AppProjectWizard from "./pages/app/AppProjectWizard.jsx";
 import InviteAccept from "./pages/InviteAccept.jsx";
+import AppSubscribe from "./pages/app/AppSubscribe.jsx";
+
+const ACTIVE_STATUSES = new Set(["trialing", "active"]);
+const POLL_INTERVAL_MS = 1500;
+const POLL_MAX_ATTEMPTS = 8; // ~12 seconds
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
-  if (loading) {
+  const { user, loading, setUser } = useAuth();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [polling, setPolling] = useState(false);
+
+  const checkoutSuccess = searchParams.get("checkout") === "success";
+
+  useEffect(() => {
+    if (!checkoutSuccess || !user || ACTIVE_STATUSES.has(user.subscription_status)) return;
+
+    let attempts = 0;
+    setPolling(true);
+
+    const interval = setInterval(async () => {
+      attempts++;
+      const { data: profile } = await supabase
+        .from("users")
+        .select("subscription_status, stripe_customer_id, stripe_subscription_id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (ACTIVE_STATUSES.has(profile?.subscription_status)) {
+        clearInterval(interval);
+        setUser((u) => ({ ...u, ...profile }));
+        setSearchParams({}, { replace: true });
+        setPolling(false);
+      } else if (attempts >= POLL_MAX_ATTEMPTS) {
+        clearInterval(interval);
+        setPolling(false);
+      }
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [checkoutSuccess, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loading || polling) {
     return (
-      <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+      <div className="min-h-screen bg-[#09090b] flex flex-col items-center justify-center gap-4">
         <div className="w-6 h-6 border-2 border-[#60a5fa]/30 border-t-[#60a5fa] rounded-full animate-spin" />
+        {polling && (
+          <p className="text-[13px] text-slate-400 font-body">Confirming your subscription…</p>
+        )}
       </div>
     );
   }
+
   if (!user) return <Navigate to="/signin" replace />;
+
+  const isSubscribePage = location.pathname === "/app/subscribe";
+  if (!isSubscribePage && !ACTIVE_STATUSES.has(user.subscription_status)) {
+    return <Navigate to="/app/subscribe" replace />;
+  }
+
   return children;
 }
 
@@ -80,6 +131,7 @@ export default function App() {
           <Route path="vendors" element={<AppVendors />} />
           <Route path="notifications" element={<AppNotifications />} />
           <Route path="settings" element={<AppSettings />} />
+          <Route path="subscribe" element={<AppSubscribe />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

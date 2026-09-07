@@ -120,6 +120,7 @@ export function AuthProvider({ children }) {
       value={{
         user,
         loading,
+        setUser,
         signIn,
         signUp,
         resendConfirmation,
