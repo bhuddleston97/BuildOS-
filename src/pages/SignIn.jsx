@@ -105,8 +105,8 @@ function SignInForm({ error, setError }) {
     try {
       await signIn(email, password);
       navigate(searchParams.get("redirect") || "/app");
-    } catch {
-      setError("Incorrect email or password. Please try again.");
+    } catch (err) {
+      setError(formatAuthError(err, "Incorrect email or password. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -175,8 +175,7 @@ function SignUpForm({ error, setError }) {
       }
       navigate("/app");
     } catch (err) {
-      const msg = err?.response?.data?.email?.message || "Something went wrong. Please try again.";
-      setError(msg.includes("unique") ? "An account with that email already exists." : msg);
+      setError(formatAuthError(err, "Unable to create your account. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -232,4 +231,23 @@ function SignUpForm({ error, setError }) {
       </p>
     </form>
   );
+}
+
+function formatAuthError(error, fallback) {
+  const message = String(error?.message || error?.error_description || "").trim();
+  const normalized = message.toLowerCase();
+
+  if (normalized.includes("already registered") || normalized.includes("already been registered") || normalized.includes("user already exists") || normalized.includes("duplicate")) {
+    return "An account with that email already exists. Sign in instead or use a different email.";
+  }
+  if (normalized.includes("rate limit") || normalized.includes("too many requests")) {
+    return "Too many emails were requested. Wait a few minutes, then try again or use the resend option.";
+  }
+  if (normalized.includes("email address not authorized")) {
+    return "Supabase email delivery is restricted. Configure custom SMTP in Supabase Authentication settings before signing up this address.";
+  }
+  if (normalized.includes("redirect") || normalized.includes("not allowed")) {
+    return "This app URL is not allowed by Supabase Auth. Add the deployed URL under Authentication URL Configuration.";
+  }
+  return message || fallback;
 }
