@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import { Check, ArrowRight } from "lucide-react";
 
@@ -77,14 +77,26 @@ const faqs = [
 export default function Pricing() {
   const [annual, setAnnual] = useState(true);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const checkoutStarted = useRef(false);
   const [checkoutPlan, setCheckoutPlan] = useState("");
   const [checkoutError, setCheckoutError] = useState("");
 
-  async function startCheckout(plan) {
+  useEffect(() => {
+    const plan = searchParams.get("plan");
+    const interval = searchParams.get("interval");
+    if (!plan || checkoutStarted.current) return;
+    if (interval === "month") setAnnual(false);
+    if (interval === "year") setAnnual(true);
+    checkoutStarted.current = true;
+    startCheckout(plan, interval === "month" ? "month" : "year");
+  }, [searchParams]);
+
+  async function startCheckout(plan, requestedInterval = annual ? "year" : "month") {
     setCheckoutPlan(plan); setCheckoutError("");
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { navigate(`/signin?redirect=/pricing&plan=${plan}`); return; }
-    const { data, error } = await supabase.functions.invoke("create-checkout", { body: { plan, interval: annual ? "year" : "month" } });
+    if (!session) { navigate(`/signin?redirect=${encodeURIComponent(`/pricing?plan=${plan}&interval=${requestedInterval}`)}`); return; }
+    const { data, error } = await supabase.functions.invoke("create-checkout", { body: { plan, interval: requestedInterval } });
     if (error || !data?.url) { setCheckoutError(error?.message || "Checkout is temporarily unavailable."); setCheckoutPlan(""); return; }
     window.location.assign(data.url);
   }
