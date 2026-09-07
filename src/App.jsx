@@ -46,15 +46,16 @@ function ProtectedRoute({ children }) {
 
     const interval = setInterval(async () => {
       attempts++;
-      const { data: profile } = await supabase
-        .from("users")
-        .select("subscription_status, stripe_customer_id, stripe_subscription_id")
-        .eq("id", user.id)
+      // Poll organizations table — that's where the webhook writes subscription_status
+      const { data: org } = await supabase
+        .from("organizations")
+        .select("subscription_status, subscription_plan, subscription_period_end, stripe_customer_id")
+        .eq("id", user.organization_id)
         .maybeSingle();
 
-      if (ACTIVE_STATUSES.has(profile?.subscription_status)) {
+      if (ACTIVE_STATUSES.has(org?.subscription_status)) {
         clearInterval(interval);
-        setUser((u) => ({ ...u, ...profile }));
+        setUser((u) => ({ ...u, ...org }));
         setSearchParams({}, { replace: true });
         setPolling(false);
       } else if (attempts >= POLL_MAX_ATTEMPTS) {

@@ -145,7 +145,16 @@ export function useAuth() {
 async function hydrateUser(authUser) {
   const { data: profile, error } = await supabase
     .from("users")
-    .select("*")
+    .select(`
+      *,
+      organizations (
+        subscription_status,
+        subscription_plan,
+        subscription_period_end,
+        stripe_customer_id,
+        stripe_subscription_id
+      )
+    `)
     .eq("id", authUser.id)
     .maybeSingle();
 
@@ -153,11 +162,18 @@ async function hydrateUser(authUser) {
     console.error("Unable to load user profile:", error);
   }
 
+  const org = profile?.organizations ?? null;
+
   return {
     ...authUser,
     ...(profile || {}),
     full_name: profile?.full_name || authUser.user_metadata?.full_name || "",
     job_title: profile?.job_title || authUser.user_metadata?.job_title || "",
     email: authUser.email || profile?.email || "",
+    // Flatten org billing fields onto user for easy access in ProtectedRoute / UI
+    subscription_status: org?.subscription_status ?? null,
+    subscription_plan: org?.subscription_plan ?? null,
+    subscription_period_end: org?.subscription_period_end ?? null,
+    stripe_customer_id: org?.stripe_customer_id ?? null,
   };
 }
