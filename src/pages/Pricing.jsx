@@ -97,7 +97,28 @@ export default function Pricing() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { navigate(`/signin?redirect=${encodeURIComponent(`/pricing?plan=${plan}&interval=${requestedInterval}`)}`); return; }
     const { data, error } = await supabase.functions.invoke("create-checkout", { body: { plan, interval: requestedInterval } });
-    if (error || !data?.url) { setCheckoutError(error?.message || "Checkout is temporarily unavailable."); setCheckoutPlan(""); return; }
+
+    if (error) {
+      // Extract the real message from the edge function response body
+      let msg = "Checkout is temporarily unavailable.";
+      try {
+        const body = await error.context?.json?.();
+        msg = body?.error || error.message || msg;
+      } catch {
+        msg = error.message || msg;
+      }
+      console.error("create-checkout error:", error, "body msg:", msg);
+      setCheckoutError(msg);
+      setCheckoutPlan("");
+      return;
+    }
+
+    if (!data?.url) {
+      setCheckoutError("No checkout URL returned. Please try again.");
+      setCheckoutPlan("");
+      return;
+    }
+
     window.location.assign(data.url);
   }
 

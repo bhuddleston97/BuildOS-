@@ -30,16 +30,31 @@ export default function AppSubscribe() {
   async function startCheckout(slug) {
     setError("");
     setLoading(slug);
-    try {
-      const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
-        body: { plan: slug, interval: "year" },
-      });
-      if (fnError || !data?.url) throw new Error(fnError?.message || "Checkout is temporarily unavailable.");
-      window.location.assign(data.url);
-    } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+    const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
+      body: { plan: slug, interval: "year" },
+    });
+
+    if (fnError) {
+      let msg = "Checkout is temporarily unavailable.";
+      try {
+        const body = await fnError.context?.json?.();
+        msg = body?.error || fnError.message || msg;
+      } catch {
+        msg = fnError.message || msg;
+      }
+      console.error("create-checkout error:", fnError, "body msg:", msg);
+      setError(msg);
       setLoading(null);
+      return;
     }
+
+    if (!data?.url) {
+      setError("No checkout URL returned. Please try again.");
+      setLoading(null);
+      return;
+    }
+
+    window.location.assign(data.url);
   }
 
   return (
