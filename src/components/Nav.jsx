@@ -69,7 +69,7 @@ export default function Nav() {
             Sign in
           </Link>
           <Link
-            to="/signin"
+            to="/pricing"
             className="bg-brand-lime text-[#09090b] text-[13px] font-display font-[700] px-4 py-2 rounded-md hover:bg-white transition-all duration-200 tracking-[-0.01em]"
           >
             Get started
@@ -105,9 +105,16 @@ export default function Nav() {
               {l.label}
             </NavLink>
           ))}
-          <div className="pt-3 border-t border-white/[0.06]">
+          <div className="pt-3 border-t border-white/[0.06] space-y-2">
             <Link
               to="/signin"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center w-full border border-white/[0.1] text-white text-[14px] font-display font-[700] px-5 py-3 rounded-md"
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/pricing"
               onClick={() => setOpen(false)}
               className="flex items-center justify-center w-full bg-brand-lime text-[#09090b] text-[14px] font-display font-[700] px-5 py-3 rounded-md"
             >
